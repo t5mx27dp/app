@@ -9,9 +9,7 @@ type Option func(*Controller)
 
 func WithContext(ctx context.Context) Option {
 	return func(c *Controller) {
-		ctx, cancel := context.WithCancel(ctx)
-		c.ctx = ctx
-		c.cancel = cancel
+		c.ctx, c.cancel = context.WithCancel(ctx)
 	}
 }
 
