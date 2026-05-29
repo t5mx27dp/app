@@ -1,17 +1,10 @@
 package app
 
 import (
-	"context"
 	"os"
 )
 
 type Option func(*Controller)
-
-func WithContext(ctx context.Context) Option {
-	return func(c *Controller) {
-		c.ctx, c.cancel = context.WithCancel(ctx)
-	}
-}
 
 func WithSignal(signal os.Signal) Option {
 	return func(c *Controller) {

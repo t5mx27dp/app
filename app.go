@@ -34,14 +34,12 @@ func NewController(app App, opts ...Option) *Controller {
 		opt(c)
 	}
 
-	if c.ctx == nil {
-		c.ctx, c.cancel = context.WithCancel(context.Background())
-	}
-
 	return c
 }
 
-func (c *Controller) Run() error {
+func (c *Controller) Run(ctx context.Context) error {
+	c.ctx, c.cancel = context.WithCancel(ctx)
+
 	c.wg = &sync.WaitGroup{}
 
 	defer func() {
