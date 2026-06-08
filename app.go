@@ -7,14 +7,14 @@ import (
 	"sync"
 )
 
-type App interface {
+type Runnable interface {
 	SetUp(ctx context.Context, spawn Spawn) error
 	TearDown()
 }
 
 type Spawn func(fn func(ctx context.Context))
 
-type Controller struct {
+type App struct {
 	ctx    context.Context
 	cancel context.CancelFunc
 	wg     *sync.WaitGroup
@@ -22,54 +22,54 @@ type Controller struct {
 	signal  chan os.Signal
 	signals []os.Signal
 
-	app App
+	runner Runnable
 }
 
-func NewController(app App, opts ...Option) *Controller {
-	c := &Controller{
-		app: app,
+func New(runner Runnable, opts ...Option) *App {
+	a := &App{
+		runner: runner,
 	}
 
 	for _, opt := range opts {
-		opt(c)
+		opt(a)
 	}
 
-	return c
+	return a
 }
 
-func (c *Controller) Run(ctx context.Context) error {
-	c.ctx, c.cancel = context.WithCancel(ctx)
+func (a *App) Run(ctx context.Context) error {
+	a.ctx, a.cancel = context.WithCancel(ctx)
 
-	c.wg = &sync.WaitGroup{}
+	a.wg = &sync.WaitGroup{}
 
 	defer func() {
-		c.cancel()
-		c.wg.Wait()
-		c.app.TearDown()
+		a.cancel()
+		a.wg.Wait()
+		a.runner.TearDown()
 	}()
 
-	err := c.app.SetUp(c.ctx, c.spawn)
+	err := a.runner.SetUp(a.ctx, a.spawn)
 	if err != nil {
 		return err
 	}
 
-	if c.signal != nil {
-		signal.Notify(c.signal, c.signals...)
-		defer signal.Stop(c.signal)
+	if a.signal != nil {
+		signal.Notify(a.signal, a.signals...)
+		defer signal.Stop(a.signal)
 
 		select {
-		case <-c.ctx.Done():
-		case <-c.signal:
+		case <-a.ctx.Done():
+		case <-a.signal:
 		}
 	}
 
 	return nil
 }
 
-func (c *Controller) spawn(fn func(ctx context.Context)) {
-	c.wg.Add(1)
+func (a *App) spawn(fn func(ctx context.Context)) {
+	a.wg.Add(1)
 	go func() {
-		defer c.wg.Done()
-		fn(c.ctx)
+		defer a.wg.Done()
+		fn(a.ctx)
 	}()
 }

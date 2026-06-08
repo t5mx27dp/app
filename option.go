@@ -4,14 +4,14 @@ import (
 	"os"
 )
 
-type Option func(*Controller)
+type Option func(*App)
 
 func WithSignal(signal os.Signal) Option {
-	return func(c *Controller) {
-		c.signals = append(c.signals, signal)
+	return func(a *App) {
+		a.signals = append(a.signals, signal)
 
-		if c.signal == nil {
-			c.signal = make(chan os.Signal, 1)
+		if a.signal == nil {
+			a.signal = make(chan os.Signal, 1)
 		}
 	}
 }
