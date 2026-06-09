@@ -19,7 +19,7 @@ type Spawn func(fn func(ctx context.Context))
 type App struct {
 	ctx    context.Context
 	cancel context.CancelFunc
-	wg     *sync.WaitGroup
+	wg     sync.WaitGroup
 
 	signal  chan os.Signal
 	signals []os.Signal
@@ -31,7 +31,6 @@ type App struct {
 
 func New(runner Runnable, opts ...Option) *App {
 	a := &App{
-		wg:     &sync.WaitGroup{},
 		runner: runner,
 	}
 
