@@ -70,16 +70,6 @@ func (a *App) Run(ctx context.Context) error {
 	return nil
 }
 
-func (a *App) listen() {
-	signal.Notify(a.signal, a.signals...)
-	defer signal.Stop(a.signal)
-
-	select {
-	case <-a.ctx.Done():
-	case <-a.signal:
-	}
-}
-
 func (a *App) setUp() error {
 	return a.runner.SetUp(a.ctx, a.spawn)
 }
@@ -92,6 +82,16 @@ func (a *App) tearDown() {
 	defer cancel()
 
 	a.runner.TearDown(ctx)
+}
+
+func (a *App) listen() {
+	signal.Notify(a.signal, a.signals...)
+	defer signal.Stop(a.signal)
+
+	select {
+	case <-a.ctx.Done():
+	case <-a.signal:
+	}
 }
 
 func (a *App) spawn(fn func(ctx context.Context)) {
