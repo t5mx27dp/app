@@ -54,8 +54,8 @@ func (a *App) Run(ctx context.Context) error {
 
 	defer func() {
 		a.cancel()
-		a.wg.Wait()
 		a.tearDown()
+		a.wg.Wait()
 	}()
 
 	err := a.setUp()
