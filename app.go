@@ -49,6 +49,7 @@ func (a *App) Run(ctx context.Context) error {
 	if a.ctx != nil {
 		return errors.New("app is running")
 	}
+
 	a.ctx, a.cancel = context.WithCancel(ctx)
 
 	defer func() {
