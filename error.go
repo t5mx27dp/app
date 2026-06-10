@@ -1,37 +1,18 @@
 package app
 
-type SystemError struct {
+type Error struct {
 	Code    string
 	Message string
 }
 
-func NewSystemError(code, message string) *SystemError {
-	return &SystemError{
+func NewError(code, message string) *Error {
+	return &Error{
 		Code:    code,
 		Message: message,
 	}
 }
 
-func (e *SystemError) Error() string {
-	if e.Message == "" {
-		return e.Code
-	}
-	return e.Code + ": " + e.Message
-}
-
-type BusinessError struct {
-	Code    string
-	Message string
-}
-
-func NewBusinessError(code, message string) *BusinessError {
-	return &BusinessError{
-		Code:    code,
-		Message: message,
-	}
-}
-
-func (e *BusinessError) Error() string {
+func (e *Error) Error() string {
 	if e.Message == "" {
 		return e.Code
 	}
