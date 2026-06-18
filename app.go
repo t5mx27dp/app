@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"errors"
 	"os"
 	"os/signal"
 	"sync"
@@ -46,10 +45,6 @@ func New(runner Runnable, opts ...Option) *App {
 }
 
 func (a *App) Run(ctx context.Context) error {
-	if a.ctx != nil {
-		return errors.New("app is running")
-	}
-
 	a.ctx, a.cancel = context.WithCancel(ctx)
 
 	defer func() {
