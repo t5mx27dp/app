@@ -28,8 +28,12 @@ type App struct {
 	runner Runnable
 }
 
-func New(runner Runnable, opts ...Option) *App {
+func New(ctx context.Context, runner Runnable, opts ...Option) *App {
+	ctx, cancel := context.WithCancel(ctx)
+
 	a := &App{
+		ctx:    ctx,
+		cancel: cancel,
 		runner: runner,
 	}
 
@@ -44,9 +48,7 @@ func New(runner Runnable, opts ...Option) *App {
 	return a
 }
 
-func (a *App) Run(ctx context.Context) error {
-	a.ctx, a.cancel = context.WithCancel(ctx)
-
+func (a *App) Run() error {
 	defer func() {
 		a.cancel()
 		a.tearDown()
@@ -58,9 +60,7 @@ func (a *App) Run(ctx context.Context) error {
 		return err
 	}
 
-	if a.signal != nil {
-		a.listen()
-	}
+	a.listen()
 
 	return nil
 }
@@ -80,6 +80,10 @@ func (a *App) tearDown() {
 }
 
 func (a *App) listen() {
+	if a.signal == nil {
+		return
+	}
+
 	signal.Notify(a.signal, a.signals...)
 	defer signal.Stop(a.signal)
 
