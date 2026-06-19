@@ -1,0 +1,10 @@
+template: testify
+recursive: true
+pkgname: '{{.SrcPackageName}}Mock'
+structname: '{{.InterfaceName}}'
+filename: '{{.InterfaceName | snakecase}}.go' 
+dir: '{{.InterfaceDir}}/mock'
+packages:
+  github.com/t5mx27dp/app:
+    config:
+      all: true

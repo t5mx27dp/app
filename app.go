@@ -48,6 +48,10 @@ func New(ctx context.Context, runner Runnable, opts ...Option) *App {
 	return a
 }
 
+func (a *App) GetSignal() chan os.Signal {
+	return a.signal
+}
+
 func (a *App) Run() error {
 	defer func() {
 		a.cancel()
