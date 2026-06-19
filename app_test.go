@@ -9,13 +9,13 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/t5mx27dp/app"
-	appMock "github.com/t5mx27dp/app/mock"
+	appmock "github.com/t5mx27dp/app/mock"
 )
 
 func TestApp(t *testing.T) {
 	t.Run("Default", func(t *testing.T) {
 		ctx := context.Background()
-		runner := appMock.NewRunnable(t)
+		runner := appmock.NewRunnable(t)
 
 		runner.On("SetUp", mock.Anything, mock.Anything).Return(nil)
 		runner.On("TearDown", mock.Anything).Return()
@@ -36,7 +36,7 @@ func TestApp(t *testing.T) {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
-		runner := appMock.NewRunnable(t)
+		runner := appmock.NewRunnable(t)
 
 		runner.On("SetUp", mock.Anything, mock.Anything).Return(nil)
 		runner.On("TearDown", mock.Anything).Return()
@@ -53,7 +53,7 @@ func TestApp(t *testing.T) {
 
 	t.Run("WithoutSignal", func(t *testing.T) {
 		ctx := context.Background()
-		runner := appMock.NewRunnable(t)
+		runner := appmock.NewRunnable(t)
 
 		runner.On("SetUp", mock.Anything, mock.Anything).Return(nil)
 		runner.On("TearDown", mock.Anything).Return()

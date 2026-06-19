@@ -1,6 +1,6 @@
 template: testify
 recursive: true
-pkgname: '{{.SrcPackageName}}Mock'
+pkgname: '{{.SrcPackageName}}mock'
 structname: '{{.InterfaceName}}'
 filename: '{{.InterfaceName | snakecase}}.go' 
 dir: '{{.InterfaceDir}}/mock'
