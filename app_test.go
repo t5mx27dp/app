@@ -22,10 +22,9 @@ func TestApp(t *testing.T) {
 
 		app := app.New(ctx, runner, app.WithSignal(syscall.SIGINT), app.WithSignal(syscall.SIGTERM))
 
-		sig := app.GetSignal()
-
 		go func() {
-			sig <- syscall.SIGINT
+			signal := app.GetSignal()
+			signal <- syscall.SIGINT
 		}()
 
 		err := app.Run()
